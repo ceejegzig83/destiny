@@ -10,20 +10,26 @@ import {
   Clock,
   ArrowRight,
   MapPin,
-  Flame
+  Flame,
+  Smartphone,
+  Download
 } from 'lucide-react';
-import { ServiceTab } from '../types';
+import { ServiceTab, PortalConfig } from '../types';
 
 interface HeroBannerProps {
   onSelectService: (tab: ServiceTab) => void;
   onQuickRideSelect: () => void;
   currentLocation: string;
+  portalConfig: PortalConfig;
+  onOpenDownloadModal?: () => void;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   onSelectService,
   onQuickRideSelect,
   currentLocation,
+  portalConfig,
+  onOpenDownloadModal
 }) => {
   const serviceCards = [
     {
@@ -90,14 +96,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-display leading-tight">
-              FLOURISH DESTINY <br />
+              {portalConfig.portalName.split(' ')[0]} {portalConfig.portalName.split(' ')[1] || ''} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                COLLECTION
+                {portalConfig.portalName.split(' ').slice(2).join(' ') || 'COLLECTION'}
               </span>
             </h1>
 
             <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-xl">
-              From bespoke Agbada tailoring to swift Keke rides, 50kg rice delivery, mouthwatering Smokey Jollof, and grand wedding catering across <span className="text-amber-300 font-semibold">{currentLocation}</span>.
+              {portalConfig.portalTagline}. Fast transit, bespoke tailoring, catering banquets and wholesale groceries across <span className="text-amber-300 font-semibold">{currentLocation}</span>.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -117,6 +123,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               >
                 <span>🚕 Book a Keke / Car</span>
               </button>
+
+              {onOpenDownloadModal && (
+                <button
+                  onClick={onOpenDownloadModal}
+                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-4 py-2.5 rounded-xl font-bold text-xs transition flex items-center gap-2"
+                >
+                  <Smartphone className="w-4 h-4 text-emerald-400" />
+                  <span>Get App (.APK / Win / iOS)</span>
+                </button>
+              )}
             </div>
 
             {/* Guarantees row */}
@@ -131,7 +147,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               </div>
               <div className="flex items-center gap-1.5">
                 <Flame className="w-4 h-4 text-red-400 shrink-0" />
-                <span>100% Guaranteed Quality</span>
+                <span>Hotline: {portalConfig.hotline}</span>
               </div>
             </div>
           </div>

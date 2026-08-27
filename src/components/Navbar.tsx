@@ -15,9 +15,11 @@ import {
   X,
   Layers,
   Smartphone,
-  Download
+  Download,
+  ShieldCheck,
+  Shield
 } from 'lucide-react';
-import { ServiceTab, UserRole, CartItem, NotificationItem } from '../types';
+import { ServiceTab, UserRole, CartItem, NotificationItem, PortalConfig } from '../types';
 import { POPULAR_LOCATIONS } from '../data/mockData';
 import { formatNaira } from '../utils/formatters';
 
@@ -36,6 +38,8 @@ interface NavbarProps {
   currentLocation: string;
   setCurrentLocation: (loc: string) => void;
   openApkModal: () => void;
+  portalConfig: PortalConfig;
+  onOpenAdmin: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -53,6 +57,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentLocation,
   setCurrentLocation,
   openApkModal,
+  portalConfig,
+  onOpenAdmin
 }) => {
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -73,12 +79,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-stone-900 text-stone-100 shadow-md border-b border-stone-800" id="main-header">
+      {/* Top Announcement Bar if enabled in portalConfig */}
+      {portalConfig.showAnnouncement && portalConfig.announcementText && (
+        <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-stone-950 text-[11px] sm:text-xs font-bold py-1 px-4 text-center shadow-inner flex items-center justify-center gap-2">
+          <span>{portalConfig.announcementText}</span>
+        </div>
+      )}
+
       {/* Top utility bar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 border-b border-stone-800/80 flex items-center justify-between text-xs">
         <div className="flex items-center space-x-3">
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            Kogi State & Nationwide Nigeria
+            {portalConfig.primaryLocation} & Nationwide Nigeria
           </span>
 
           {/* Location selector */}
@@ -120,11 +133,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Role switcher & hotline */}
-        <div className="flex items-center space-x-3">
-          <span className="hidden sm:inline text-stone-400">
-            Hotline: <strong className="text-stone-200">09162723865</strong>
+        {/* Role switcher, Admin Link & Hotline */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <span className="hidden md:inline text-stone-400">
+            Hotline: <strong className="text-stone-200 font-mono">{portalConfig.hotline}</strong>
           </span>
+
+          {/* Quick Admin Dashboard Link */}
+          <button
+            onClick={onOpenAdmin}
+            className="flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-1 rounded-lg text-xs font-semibold transition"
+            title="Access Admin CMS Portal via /#admin"
+          >
+            <Shield className="w-3 h-3 text-amber-400" />
+            <span className="hidden sm:inline">Admin (/#admin)</span>
+            <span className="sm:hidden">Admin</span>
+          </button>
 
           <div className="relative">
             <button
@@ -133,17 +157,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-2.5 py-1 rounded-lg transition text-xs font-medium"
             >
               <UserCheck className="w-3.5 h-3.5 text-amber-400" />
-              <span className="capitalize">{userRole} Portal</span>
+              <span className="capitalize">{userRole} View</span>
               <ChevronDown className="w-3 h-3" />
             </button>
 
             {isRoleDropdownOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-stone-800 border border-stone-700 rounded-xl shadow-2xl py-1 z-50 text-xs">
+              <div className="absolute right-0 mt-1 w-52 bg-stone-800 border border-stone-700 rounded-xl shadow-2xl py-1 z-50 text-xs">
                 <button
                   onClick={() => {
                     setUserRole('customer');
                     setIsRoleDropdownOpen(false);
-                    if (activeTab === 'vendor' || activeTab === 'driver') setActiveTab('all');
+                    if (activeTab === 'vendor' || activeTab === 'driver' || activeTab === 'admin') setActiveTab('all');
                   }}
                   className={`w-full text-left px-3 py-2 hover:bg-stone-700 flex items-center gap-2 ${
                     userRole === 'customer' ? 'text-amber-400 font-semibold' : 'text-stone-300'
@@ -175,6 +199,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <span>🚕 Driver & Keke Mode</span>
                 </button>
+                <div className="border-t border-stone-700 my-1"></div>
+                <button
+                  onClick={() => {
+                    setIsRoleDropdownOpen(false);
+                    onOpenAdmin();
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-amber-500/20 text-amber-300 font-bold flex items-center gap-2"
+                >
+                  <Shield className="w-3.5 h-3.5 text-amber-400" />
+                  <span>🛡️ Master Admin (/#admin)</span>
+                </button>
               </div>
             )}
           </div>
@@ -196,14 +231,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-1">
                 <span className="font-extrabold tracking-tight text-base sm:text-lg text-amber-400 font-display">
-                  FLOURISH DESTINY
+                  {portalConfig.portalName}
                 </span>
                 <span className="hidden xs:inline-block text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   Collection
                 </span>
               </div>
-              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold -mt-0.5 hidden sm:block">
-                Fashion • Rides • Food & Events
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold -mt-0.5 hidden sm:block truncate max-w-xs">
+                {portalConfig.portalTagline}
               </p>
             </div>
           </button>
@@ -236,17 +271,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Search className="w-5 h-5" />
           </button>
 
-          {/* Android App / APK button */}
+          {/* Android App / APK / Multi-Platform Download button */}
           <button
             id="install-apk-btn"
             onClick={openApkModal}
-            className="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white border border-stone-700 px-2.5 sm:px-3 py-1.5 rounded-xl transition text-xs font-semibold"
-            title="Install Android App / Download APK"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500/15 to-emerald-600/25 hover:from-emerald-500/25 hover:to-emerald-600/35 text-emerald-300 border border-emerald-500/40 px-2.5 sm:px-3 py-1.5 rounded-xl transition text-xs font-bold shadow-sm"
+            title="Download Android APK, iOS WebApp & Windows Desktop App"
           >
             <Smartphone className="w-4 h-4 text-emerald-400" />
-            <span className="hidden sm:inline">Get App</span>
-            <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
-              APK
+            <span className="hidden sm:inline">Download App</span>
+            <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold">
+              APK / Win / iOS
             </span>
           </button>
 
@@ -351,6 +386,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Driver Cockpit</span>
             </button>
           )}
+
+          <button
+            onClick={onOpenAdmin}
+            className="ml-auto px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition flex items-center gap-1.5 text-amber-300 hover:bg-amber-500/20"
+          >
+            <Shield className="w-3.5 h-3.5 text-amber-400" />
+            <span>Admin Portal</span>
+          </button>
         </div>
       </nav>
 
@@ -386,13 +429,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 openApkModal();
                 setIsMobileMenuOpen(false);
               }}
-              className="w-full py-2 px-3 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+              className="w-full py-2 px-3 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 hover:from-emerald-500/30 hover:to-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
             >
               <Smartphone className="w-4 h-4 text-emerald-400" />
-              <span>Install Android App (.APK)</span>
+              <span>Download Apps (Android APK / Win / iOS)</span>
             </button>
 
-            <div className="flex justify-between items-center text-xs text-stone-400">
+            <button
+              onClick={() => {
+                onOpenAdmin();
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full py-2 px-3 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
+            >
+              <Shield className="w-4 h-4 text-amber-400" />
+              <span>Open Admin Portal (/#admin)</span>
+            </button>
+
+            <div className="flex justify-between items-center text-xs text-stone-400 pt-1">
               <span>Role: <strong className="text-amber-400 capitalize">{userRole}</strong></span>
               <button
                 onClick={() => {

@@ -1,6 +1,49 @@
-export type ServiceTab = 'all' | 'fashion' | 'rides' | 'groceries' | 'catering' | 'bakery' | 'orders' | 'vendor' | 'driver';
+export type ServiceTab = 'all' | 'fashion' | 'rides' | 'groceries' | 'catering' | 'bakery' | 'orders' | 'vendor' | 'driver' | 'admin';
 
-export type UserRole = 'customer' | 'vendor' | 'driver';
+export type UserRole = 'customer' | 'vendor' | 'driver' | 'admin';
+
+export interface PortalConfig {
+  portalName: string;
+  portalTagline: string;
+  hotline: string;
+  whatsappNumber: string;
+  contactEmail: string;
+  primaryLocation: string;
+  announcementText: string;
+  showAnnouncement: boolean;
+  promoCode: string;
+  promoDiscountPercent: number;
+  baseDeliveryFee: number;
+  freeDeliveryThreshold: number;
+  bankAccountName: string;
+  bankName: string;
+  bankAccountNumber: string;
+}
+
+export interface DriverInfo {
+  id: string;
+  name: string;
+  phone: string;
+  vehicleType: 'Keke Napep' | 'Saloon Car' | 'SUV' | 'Van';
+  plateNumber: string;
+  location: string;
+  rating: number;
+  totalTrips: number;
+  status: 'active' | 'suspended' | 'pending';
+  walletEarnings: number;
+}
+
+export interface VendorInfo {
+  id: string;
+  businessName: string;
+  ownerName: string;
+  phone: string;
+  category: 'Fashion & Tailoring' | 'Groceries' | 'Catering' | 'Bakery';
+  location: string;
+  status: 'verified' | 'pending' | 'suspended';
+  totalSalesCount: number;
+  rating: number;
+}
 
 export interface FashionItem {
   id: string;

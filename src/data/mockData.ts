@@ -7,7 +7,10 @@ import {
   RideOption,
   Order,
   NotificationItem,
-  WalletTransaction
+  WalletTransaction,
+  PortalConfig,
+  DriverInfo,
+  VendorInfo
 } from '../types';
 
 export const POPULAR_LOCATIONS = [
@@ -695,5 +698,98 @@ export const INITIAL_WALLET_TRANSACTIONS: WalletTransaction[] = [
     date: 'Aug 25, 2026',
     status: 'successful',
     reference: 'RIDE-11029'
+  }
+];
+
+export const DEFAULT_PORTAL_CONFIG: PortalConfig = {
+  portalName: 'FLOURISH DESTINY COLLECTION',
+  portalTagline: 'Bespoke Fashion, Rides, Wholesale Groceries, Catering & Event Management',
+  hotline: '09162723865',
+  whatsappNumber: '+2349162723865',
+  contactEmail: 'admin@flourishdestiny.com.ng',
+  primaryLocation: 'Kogi State',
+  announcementText: '🎉 Welcome to Flourish Destiny Super App! Fast deliveries across Kogi State and nationwide Nigeria. Hotline: 09162723865',
+  showAnnouncement: true,
+  promoCode: 'DESTINYFIRST',
+  promoDiscountPercent: 10,
+  baseDeliveryFee: 1500,
+  freeDeliveryThreshold: 45000,
+  bankAccountName: 'Flourish Destiny Multi-Services Ltd',
+  bankName: 'First Bank of Nigeria',
+  bankAccountNumber: '3128491028'
+};
+
+export const INITIAL_DRIVERS: DriverInfo[] = [
+  {
+    id: 'drv-1',
+    name: 'Musa Ibrahim',
+    phone: '0803 551 2291',
+    vehicleType: 'Keke Napep',
+    plateNumber: 'KG-LKJ-482-AA',
+    location: 'Lokoja Central, Kogi',
+    rating: 4.9,
+    totalTrips: 342,
+    status: 'active',
+    walletEarnings: 124500
+  },
+  {
+    id: 'drv-2',
+    name: 'Chinedu Eze',
+    phone: '0812 443 8901',
+    vehicleType: 'Saloon Car',
+    plateNumber: 'KG-OKN-190-XB',
+    location: 'Okene, Kogi State',
+    rating: 4.8,
+    totalTrips: 218,
+    status: 'active',
+    walletEarnings: 290000
+  },
+  {
+    id: 'drv-3',
+    name: 'Sunday Alabi',
+    phone: '0901 882 1204',
+    vehicleType: 'SUV',
+    plateNumber: 'ABJ-WSE-771-KD',
+    location: 'Abuja / Interstate Charter',
+    rating: 4.95,
+    totalTrips: 87,
+    status: 'active',
+    walletEarnings: 450000
+  }
+];
+
+export const INITIAL_VENDORS: VendorInfo[] = [
+  {
+    id: 'vnd-1',
+    businessName: 'Destiny Bespoke Tailoring & Fabrics',
+    ownerName: 'Master Destiny',
+    phone: '09162723865',
+    category: 'Fashion & Tailoring',
+    location: 'Lokoja, Kogi State',
+    status: 'verified',
+    totalSalesCount: 680,
+    rating: 4.9
+  },
+  {
+    id: 'vnd-2',
+    businessName: 'Confluence Agro Commodities & Groceries',
+    ownerName: 'Hajia Fatima Sani',
+    phone: '0802 331 4455',
+    category: 'Groceries',
+    location: 'Anyigba, Kogi State',
+    status: 'verified',
+    totalSalesCount: 420,
+    rating: 4.8
+  },
+  {
+    id: 'vnd-3',
+    businessName: 'Royal Taste Kitchen & Event Banquets',
+    ownerName: 'Chef Grace Adewale',
+    phone: '0809 112 3344',
+    category: 'Catering',
+    location: 'Kabba & Lokoja, Kogi',
+    status: 'verified',
+    totalSalesCount: 195,
+    rating: 5.0
   }
 ];
