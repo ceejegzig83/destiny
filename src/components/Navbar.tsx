@@ -133,22 +133,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Role switcher, Admin Link & Hotline */}
+        {/* Role switcher & Hotline */}
         <div className="flex items-center space-x-2 sm:space-x-3">
           <span className="hidden md:inline text-stone-400">
             Hotline: <strong className="text-stone-200 font-mono">{portalConfig.hotline}</strong>
           </span>
-
-          {/* Quick Admin Dashboard Link */}
-          <button
-            onClick={onOpenAdmin}
-            className="flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-1 rounded-lg text-xs font-semibold transition"
-            title="Access Admin CMS Portal via /#admin"
-          >
-            <Shield className="w-3 h-3 text-amber-400" />
-            <span className="hidden sm:inline">Admin (/#admin)</span>
-            <span className="sm:hidden">Admin</span>
-          </button>
 
           <div className="relative">
             <button
@@ -198,17 +187,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span>🚕 Driver & Keke Mode</span>
-                </button>
-                <div className="border-t border-stone-700 my-1"></div>
-                <button
-                  onClick={() => {
-                    setIsRoleDropdownOpen(false);
-                    onOpenAdmin();
-                  }}
-                  className="w-full text-left px-3 py-2 hover:bg-amber-500/20 text-amber-300 font-bold flex items-center gap-2"
-                >
-                  <Shield className="w-3.5 h-3.5 text-amber-400" />
-                  <span>🛡️ Master Admin (/#admin)</span>
                 </button>
               </div>
             )}
@@ -386,14 +364,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Driver Cockpit</span>
             </button>
           )}
-
-          <button
-            onClick={onOpenAdmin}
-            className="ml-auto px-3.5 py-2 text-xs font-bold rounded-lg whitespace-nowrap transition flex items-center gap-1.5 text-amber-300 hover:bg-amber-500/20"
-          >
-            <Shield className="w-3.5 h-3.5 text-amber-400" />
-            <span>Admin Portal</span>
-          </button>
         </div>
       </nav>
 
@@ -433,17 +403,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Smartphone className="w-4 h-4 text-emerald-400" />
               <span>Download Apps (Android APK / Win / iOS)</span>
-            </button>
-
-            <button
-              onClick={() => {
-                onOpenAdmin();
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full py-2 px-3 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
-            >
-              <Shield className="w-4 h-4 text-amber-400" />
-              <span>Open Admin Portal (/#admin)</span>
             </button>
 
             <div className="flex justify-between items-center text-xs text-stone-400 pt-1">

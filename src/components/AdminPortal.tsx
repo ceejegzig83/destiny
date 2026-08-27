@@ -78,6 +78,8 @@ interface AdminPortalProps {
   vendors: VendorInfo[];
   setVendors: React.Dispatch<React.SetStateAction<VendorInfo[]>>;
   onExitAdmin: () => void;
+  onLogout?: () => void;
+  adminRoleTitle?: string;
   onOpenDownloadModal: () => void;
   showToast: (msg: string) => void;
 }
@@ -118,6 +120,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   vendors,
   setVendors,
   onExitAdmin,
+  onLogout,
+  adminRoleTitle = 'Super Administrator',
   onOpenDownloadModal,
   showToast
 }) => {
@@ -360,18 +364,33 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     <Shield className="w-3 h-3" /> Master Admin
                   </span>
                 </div>
-                <p className="text-[11px] text-stone-400">
-                  Full Portal CMS & Operations Control (Hash: <code className="text-amber-400 bg-stone-800 px-1 rounded">/#admin</code>)
+                <p className="text-[11px] text-stone-400 flex items-center gap-1.5">
+                  <span>Session:</span>
+                  <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" /> {adminRoleTitle} (Verified)
+                  </span>
                 </p>
               </div>
             </div>
 
-            <button
-              onClick={onExitAdmin}
-              className="md:hidden px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold rounded-lg flex items-center gap-1"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Exit
-            </button>
+            <div className="flex items-center gap-1.5 md:hidden">
+              <button
+                onClick={onExitAdmin}
+                className="px-2.5 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold rounded-lg flex items-center gap-1"
+                title="View Store"
+              >
+                <Eye className="w-3.5 h-3.5" />
+              </button>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="px-2.5 py-1.5 bg-red-950/80 border border-red-800 text-red-300 hover:bg-red-900 text-xs font-bold rounded-lg flex items-center gap-1"
+                  title="Sign Out Admin"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
@@ -381,16 +400,28 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               title="Download Android APK, iOS WebApp & Windows Executable"
             >
               <Smartphone className="w-4 h-4" />
-              <span>Download Apps (.APK / Win / iOS)</span>
+              <span>Download Apps</span>
             </button>
 
             <button
               onClick={onExitAdmin}
-              className="hidden md:flex px-4 py-1.5 bg-stone-800 hover:bg-amber-500 hover:text-stone-950 text-stone-200 text-xs font-bold rounded-xl items-center gap-1.5 transition border border-stone-700"
+              className="hidden md:flex px-3.5 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold rounded-xl items-center gap-1.5 transition border border-stone-700"
+              title="View the public storefront without signing out"
             >
               <Eye className="w-4 h-4" />
-              <span>View Live Storefront</span>
+              <span>View Storefront</span>
             </button>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-3.5 py-1.5 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-800/80 text-xs font-bold rounded-xl flex items-center gap-1.5 transition shadow-sm"
+                title="Lock Master Admin and Sign Out"
+              >
+                <Lock className="w-3.5 h-3.5 text-red-400" />
+                <span>Lock / Sign Out</span>
+              </button>
+            )}
           </div>
         </div>
       </header>

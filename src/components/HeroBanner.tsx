@@ -95,22 +95,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <span>Nigeria's Premier Multi-Service Super App</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-display leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-display leading-tight">
               {portalConfig.portalName.split(' ')[0]} {portalConfig.portalName.split(' ')[1] || ''} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
                 {portalConfig.portalName.split(' ').slice(2).join(' ') || 'COLLECTION'}
               </span>
             </h1>
 
-            <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-xl">
+            <p className="text-stone-300 text-xs sm:text-base leading-relaxed max-w-xl">
               {portalConfig.portalTagline}. Fast transit, bespoke tailoring, catering banquets and wholesale groceries across <span className="text-amber-300 font-semibold">{currentLocation}</span>.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
               <button
                 id="hero-explore-fashion-btn"
                 onClick={() => onSelectService('fashion')}
-                className="bg-amber-500 hover:bg-amber-400 text-stone-950 px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-amber-600/30 transition flex items-center gap-2"
+                className="w-full sm:w-auto justify-center bg-amber-500 hover:bg-amber-400 text-stone-950 px-5 py-3 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-amber-600/30 transition flex items-center gap-2"
               >
                 <span>Shop Fashion Collection</span>
                 <ArrowRight className="w-4 h-4" />
@@ -119,7 +119,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <button
                 id="hero-quick-ride-btn"
                 onClick={() => onSelectService('rides')}
-                className="bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 px-5 py-2.5 rounded-xl font-semibold text-sm transition flex items-center gap-2"
+                className="w-full sm:w-auto justify-center bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 px-5 py-3 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition flex items-center gap-2"
               >
                 <span>🚕 Book a Keke / Car</span>
               </button>
@@ -127,7 +127,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               {onOpenDownloadModal && (
                 <button
                   onClick={onOpenDownloadModal}
-                  className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-4 py-2.5 rounded-xl font-bold text-xs transition flex items-center gap-2"
+                  className="w-full sm:w-auto justify-center bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-4 py-2.5 rounded-xl font-bold text-xs transition flex items-center gap-2"
                 >
                   <Smartphone className="w-4 h-4 text-emerald-400" />
                   <span>Get App (.APK / Win / iOS)</span>
@@ -136,16 +136,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             </div>
 
             {/* Guarantees row */}
-            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-stone-800/80 text-[11px] text-stone-400">
-              <div className="flex items-center gap-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4 border-t border-stone-800/80 text-[11px] sm:text-xs text-stone-400">
+              <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Verified Drivers & Tailors</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Express 30m Mart Delivery</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <Flame className="w-4 h-4 text-red-400 shrink-0" />
                 <span>Hotline: {portalConfig.hotline}</span>
               </div>

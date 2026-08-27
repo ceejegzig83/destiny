@@ -48,6 +48,7 @@ import { VendorSection } from './components/VendorSection';
 import { DriverSection } from './components/DriverSection';
 import { OrdersSection } from './components/OrdersSection';
 import { AdminPortal } from './components/AdminPortal';
+import { AdminLoginGate } from './components/AdminLoginGate';
 import { CartDrawer } from './components/CartDrawer';
 import { GlobalSearchModal } from './components/GlobalSearchModal';
 import { NotificationsModal } from './components/NotificationsModal';
@@ -111,6 +112,15 @@ export default function App() {
   // Toast banner state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Admin Authentication State (Gated access with email ceejegzig83@gamil.com and password Destiny)
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('fd_admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
@@ -147,6 +157,25 @@ export default function App() {
     window.location.hash = '';
     setActiveTab('all');
     setUserRole('customer');
+  };
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdminAuthenticated(true);
+    try {
+      sessionStorage.setItem('fd_admin_auth', 'true');
+    } catch {}
+    showToast('✨ Administrator access verified. Welcome to the Master Portal!');
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminAuthenticated(false);
+    try {
+      sessionStorage.removeItem('fd_admin_auth');
+    } catch {}
+    window.location.hash = '';
+    setActiveTab('all');
+    setUserRole('customer');
+    showToast('🔒 Master admin locked and signed out.');
   };
 
   const handleTabChange = (tab: ServiceTab) => {
@@ -390,35 +419,45 @@ export default function App() {
         onOpenAdmin={handleOpenAdmin}
       />
 
-      {/* When in Admin mode, render the Admin Portal full screen */}
+      {/* When in Admin mode, render the Admin Portal if authenticated or the Login Gate */}
       {activeTab === 'admin' ? (
-        <AdminPortal
-          portalConfig={portalConfig}
-          setPortalConfig={setPortalConfig}
-          fashionList={fashionList}
-          setFashionList={setFashionList}
-          groceryList={groceryList}
-          setGroceryList={setGroceryList}
-          foodList={foodList}
-          setFoodList={setFoodList}
-          bakeryList={bakeryList}
-          setBakeryList={setBakeryList}
-          cateringPackages={cateringPackages}
-          setCateringPackages={setCateringPackages}
-          cateringBookings={cateringBookings}
-          setCateringBookings={setCateringBookings}
-          rideOptions={rideOptions}
-          setRideOptions={setRideOptions}
-          orders={orders}
-          setOrders={setOrders}
-          drivers={drivers}
-          setDrivers={setDrivers}
-          vendors={vendors}
-          setVendors={setVendors}
-          onExitAdmin={handleExitAdmin}
-          onOpenDownloadModal={() => setIsDownloadModalOpen(true)}
-          showToast={showToast}
-        />
+        isAdminAuthenticated ? (
+          <AdminPortal
+            portalConfig={portalConfig}
+            setPortalConfig={setPortalConfig}
+            fashionList={fashionList}
+            setFashionList={setFashionList}
+            groceryList={groceryList}
+            setGroceryList={setGroceryList}
+            foodList={foodList}
+            setFoodList={setFoodList}
+            bakeryList={bakeryList}
+            setBakeryList={setBakeryList}
+            cateringPackages={cateringPackages}
+            setCateringPackages={setCateringPackages}
+            cateringBookings={cateringBookings}
+            setCateringBookings={setCateringBookings}
+            rideOptions={rideOptions}
+            setRideOptions={setRideOptions}
+            orders={orders}
+            setOrders={setOrders}
+            drivers={drivers}
+            setDrivers={setDrivers}
+            vendors={vendors}
+            setVendors={setVendors}
+            onExitAdmin={handleExitAdmin}
+            onLogout={handleAdminLogout}
+            adminRoleTitle="Super Administrator"
+            onOpenDownloadModal={() => setIsDownloadModalOpen(true)}
+            showToast={showToast}
+          />
+        ) : (
+          <AdminLoginGate
+            portalConfig={portalConfig}
+            onLoginSuccess={handleAdminLoginSuccess}
+            onBackToStore={handleExitAdmin}
+          />
+        )
       ) : (
         /* Main Storefront Content Area */
         <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 space-y-10">
@@ -655,11 +694,11 @@ export default function App() {
       />
 
       {/* Mobile Sticky Bottom Navigation Bar (Phone App Feel) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-stone-900/95 backdrop-blur-md border-t border-stone-800 text-stone-300 py-1.5 px-2 flex justify-around items-center shadow-2xl">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-stone-900/95 backdrop-blur-md border-t border-stone-800 text-stone-300 py-1 px-2 flex justify-around items-center shadow-2xl safe-area-pb">
         <button
           onClick={() => handleTabChange('all')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'all' ? 'text-amber-400 font-bold' : 'text-stone-400'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition ${
+            activeTab === 'all' ? 'text-amber-400 font-bold bg-stone-800/80' : 'text-stone-400 hover:text-stone-200'
           }`}
         >
           <span className="text-base">✨</span>
@@ -668,8 +707,8 @@ export default function App() {
 
         <button
           onClick={() => handleTabChange('fashion')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'fashion' ? 'text-amber-400 font-bold' : 'text-stone-400'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition ${
+            activeTab === 'fashion' ? 'text-amber-400 font-bold bg-stone-800/80' : 'text-stone-400 hover:text-stone-200'
           }`}
         >
           <span className="text-base">👗</span>
@@ -678,8 +717,8 @@ export default function App() {
 
         <button
           onClick={() => handleTabChange('rides')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'rides' ? 'text-amber-400 font-bold' : 'text-stone-400'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition ${
+            activeTab === 'rides' ? 'text-amber-400 font-bold bg-stone-800/80' : 'text-stone-400 hover:text-stone-200'
           }`}
         >
           <span className="text-base">🚕</span>
@@ -688,8 +727,8 @@ export default function App() {
 
         <button
           onClick={() => handleTabChange('groceries')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'groceries' ? 'text-amber-400 font-bold' : 'text-stone-400'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition ${
+            activeTab === 'groceries' ? 'text-amber-400 font-bold bg-stone-800/80' : 'text-stone-400 hover:text-stone-200'
           }`}
         >
           <span className="text-base">🛒</span>
@@ -698,8 +737,8 @@ export default function App() {
 
         <button
           onClick={() => handleTabChange('orders')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'orders' ? 'text-amber-400 font-bold' : 'text-stone-400'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition ${
+            activeTab === 'orders' ? 'text-amber-400 font-bold bg-stone-800/80' : 'text-stone-400 hover:text-stone-200'
           }`}
         >
           <span className="text-base">📦</span>
@@ -707,13 +746,16 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => handleOpenAdmin()}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-lg ${
-            activeTab === 'admin' ? 'text-amber-400 font-bold' : 'text-stone-400'
-          }`}
+          onClick={() => setIsCartOpen(true)}
+          className="relative flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-stone-400 hover:text-amber-400 transition"
         >
-          <Shield className="w-4 h-4 text-amber-400" />
-          <span className="text-[10px] font-bold">Admin</span>
+          <span className="text-base">🛍️</span>
+          <span className="text-[10px]">Cart</span>
+          {cartItems.length > 0 && (
+            <span className="absolute top-0.5 right-1.5 w-4 h-4 bg-amber-500 text-stone-950 rounded-full text-[9px] font-black flex items-center justify-center">
+              {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+            </span>
+          )}
         </button>
       </div>
 
@@ -729,7 +771,7 @@ export default function App() {
             </span>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 text-stone-400">
+          <div className="flex flex-wrap justify-center gap-4 text-stone-400 text-center">
             <span>👗 Bespoke Native Tailoring</span>
             <span>•</span>
             <span>🚖 Keke & Saloon Transit</span>
@@ -749,15 +791,15 @@ export default function App() {
               <Smartphone className="w-3.5 h-3.5" />
               <span>Download Apps (.APK / Win / iOS)</span>
             </button>
-            <button
-              onClick={handleOpenAdmin}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 transition"
-            >
-              <Shield className="w-3.5 h-3.5 text-amber-400" />
-              <span>/#admin</span>
-            </button>
-            <div className="text-[11px] text-stone-500">
-              © 2026 {portalConfig.portalName} Nigeria. All Rights Reserved.
+            <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
+              <span>© 2026 {portalConfig.portalName}.</span>
+              <button
+                onClick={handleOpenAdmin}
+                className="text-stone-700 hover:text-stone-400 transition"
+                title="Admin Gateway (/#admin)"
+              >
+                🔒
+              </button>
             </div>
           </div>
         </div>
